@@ -1,0 +1,63 @@
+import { PrismaClient } from "@prisma/client";
+import {exec} from 'child_process';
+import fs from 'fs';
+
+const prisma = new PrismaClient();
+
+export default async function backupDb(req,res) {
+    const outputFile = './src/files/backup.sql';
+    try {
+        await generateDumpFile(outputFile);
+        return res.download(outputFile);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: "Erro ao realizar o backup do banco de dados"});
+    } finally {
+        setTimeout(() => {
+            console.log("Removendo arquivo de backup");
+            removeFile(outputFile);
+        }, 1 * 20 * 1000);
+    }
+};
+
+
+async function generateDumpFile(outputFile) {
+    const {DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME} = process.env;
+
+    const username = DB_USER;
+    const password = DB_PASSWORD;
+    const host = DB_HOST;
+    const port = DB_PORT;
+    const dbname = DB_NAME;
+
+    // Verifique a conexão com o banco de dados usando Prisma
+    await prisma.$connect();
+
+    // Faça o dump do banco de dados usando pg_dump
+    const dumpCommand = `PGPASSWORD='${password}' pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
+
+    exec(dumpCommand, (error, stdout, stderr) => {
+        if (error) {
+        console.error(`Erro ao executar o pg_dump: ${error.message}`);
+        return;
+        }
+        if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return;
+        }
+        console.log(`Dump do banco de dados criado com sucesso em ${outputFile}`);
+    });
+
+    await prisma.$disconnect();
+};
+
+function removeFile(filePath) {
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            console.error(`Erro ao remover o arquivo: ${err}`);
+            return;
+        }
+        console.log(`Arquivo removido com sucesso: ${filePath}`);
+    });
+}
+
