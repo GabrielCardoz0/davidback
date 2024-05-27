@@ -16,7 +16,7 @@ export default async function backupDb(req,res) {
         setTimeout(() => {
             console.log("Removendo arquivo de backup");
             removeFile(outputFile);
-        }, 1 * 20 * 1000);
+        }, 1 * 60 * 1000);
     }
 };
 
