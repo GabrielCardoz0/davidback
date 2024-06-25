@@ -5,7 +5,7 @@ import fs from 'fs';
 const prisma = new PrismaClient();
 
 export default async function backupDb(req,res) {
-    const outputFile = './files/backup.sql';
+    const outputFile = './src/files/backup.sql';
     try {
         await generateDumpFile(outputFile);
         return res.download(outputFile);
@@ -35,8 +35,33 @@ async function generateDumpFile(outputFile) {
 
     // Faça o dump do banco de dados usando pg_dump
     const dumpCommand = `echo ${SUDO_PASSWORD} | sudo -S PGPASSWORD='${password}' pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
+    const dumpCommand2 = `echo ${password} | sudo -S -u postgres pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
+    const dumpCommand3 = `echo ${SUDO_PASSWORD} | sudo -S -u postgres pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
+
 
     exec(dumpCommand, (error, stdout, stderr) => {
+        if (error) {
+        console.error(`Erro ao executar o pg_dump: ${error.message}`);
+        return;
+        }
+        if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return;
+        }
+        console.log(`Dump do banco de dados criado com sucesso em ${outputFile}`);
+    });
+    exec(dumpCommand2, (error, stdout, stderr) => {
+        if (error) {
+        console.error(`Erro ao executar o pg_dump: ${error.message}`);
+        return;
+        }
+        if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return;
+        }
+        console.log(`Dump do banco de dados criado com sucesso em ${outputFile}`);
+    });
+    exec(dumpCommand3, (error, stdout, stderr) => {
         if (error) {
         console.error(`Erro ao executar o pg_dump: ${error.message}`);
         return;
