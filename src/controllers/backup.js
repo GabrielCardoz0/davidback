@@ -22,7 +22,7 @@ export default async function backupDb(req,res) {
 
 
 async function generateDumpFile(outputFile) {
-    const {DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME} = process.env;
+    const {DB_USER,DB_PASSWORD,DB_HOST,DB_PORT,DB_NAME, SUDO_PASSWORD} = process.env;
 
     const username = DB_USER;
     const password = DB_PASSWORD;
@@ -34,7 +34,7 @@ async function generateDumpFile(outputFile) {
     await prisma.$connect();
 
     // Faça o dump do banco de dados usando pg_dump
-    const dumpCommand = `sudo PGPASSWORD='${password}' pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
+    const dumpCommand = `echo ${SUDO_PASSWORD} | sudo -S PGPASSWORD='${password}' pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
 
     exec(dumpCommand, (error, stdout, stderr) => {
         if (error) {
