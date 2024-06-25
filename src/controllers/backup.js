@@ -34,7 +34,7 @@ async function generateDumpFile(outputFile) {
     await prisma.$connect();
 
     // Faça o dump do banco de dados usando pg_dump
-    const dumpCommand = `PGPASSWORD='${password}' pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
+    const dumpCommand = `sudo PGPASSWORD='${password}' pg_dump -U ${username} -h ${host} -p ${port} ${dbname} > ${outputFile}`;
 
     exec(dumpCommand, (error, stdout, stderr) => {
         if (error) {
