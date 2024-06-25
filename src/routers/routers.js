@@ -11,6 +11,6 @@ router
     .use("/login", loginRouter)
     .use("/services", servicesRouter)
     .use("/forms", formsRouter)
-    .get("/download", backupDb);
+    .get("/backup", backupDb);
 
 export default router;
