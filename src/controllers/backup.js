@@ -5,7 +5,7 @@ import fs from 'fs';
 const prisma = new PrismaClient();
 
 export default async function backupDb(req,res) {
-    const outputFile = './src/files/backup.sql';
+    const outputFile = './files/backup.sql';
     try {
         await generateDumpFile(outputFile);
         return res.download(outputFile);
