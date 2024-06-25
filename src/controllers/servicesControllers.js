@@ -4,15 +4,17 @@ export const ServicesControllers = {
     async createService(req, res){
         try {
             const { serviceName, serviceBasePrice, serviceColabPercent, serviceRepassPercent, serviceFrequency, genre } = req.body;
-            
+
+            const profit = serviceBasePrice * (1 - serviceColabPercent/100) * (serviceRepassPercent/100);
+
             const serviceData = {
                 name: serviceName,
                 base_price: Number(serviceBasePrice),
                 colaborator_percent: Number(serviceColabPercent),
                 colaborator_value: Number((serviceBasePrice*(1 - serviceColabPercent/100)).toFixed(2)),
                 repass_percent: Number(serviceRepassPercent),
-                repass_value: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (serviceColabPercent/100)).toFixed(2)),
-                profit: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (1 - serviceColabPercent/100)).toFixed(2)),
+                repass_value: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (1 - serviceRepassPercent/100)).toFixed(2)),
+                profit,
                 genre: genre.toLowerCase() || 'masculino',
             };
 
