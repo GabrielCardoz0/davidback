@@ -90,6 +90,7 @@ model services {
   genre                String                 @db.VarChar(20)
   created_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
   updated_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  description          String?
   colaborator_services colaborator_services[]
   form_services        form_services[]
   frequencies          frequencies[]

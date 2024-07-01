@@ -3,7 +3,7 @@ import { ServicesModels } from "../models/serviceModels.js";
 export const ServicesControllers = {
     async createService(req, res){
         try {
-            const { serviceName, serviceBasePrice, serviceColabPercent, serviceRepassPercent, serviceFrequency, genre } = req.body;
+            const { serviceName, serviceBasePrice, serviceColabPercent, serviceRepassPercent, serviceFrequency, genre, serviceDescription } = req.body;
 
             const profit = serviceBasePrice * (1 - serviceColabPercent/100) * (serviceRepassPercent/100);
 
@@ -16,6 +16,7 @@ export const ServicesControllers = {
                 repass_value: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (1 - serviceRepassPercent/100)).toFixed(2)),
                 profit,
                 genre: genre.toLowerCase() || 'masculino',
+                description: serviceDescription || "",
             };
 
             const verifyFrequencies = serviceFrequency.split(";").filter(item => item).map((item, i) => ({ value: Number(item.trim()[0]) || Number(i+1), frequency: item }));
@@ -71,13 +72,14 @@ export const ServicesControllers = {
 
     async updateService(req, res){
         try {
-            const { serviceName, serviceBasePrice, serviceColabPercent, serviceRepassPercent } = req.body;
+            const { serviceName, serviceBasePrice, serviceColabPercent, serviceRepassPercent,serviceDescription } = req.body;
 
             const service = await ServicesModels.getServiceById(Number(req.params.serviceId));
             
             const serviceData = {
                 ...service,
                 name: serviceName,
+                description: serviceDescription,
                 base_price: Number(serviceBasePrice),
                 colaborator_percent: Number(serviceColabPercent),
                 repass_percent: Number(serviceRepassPercent),

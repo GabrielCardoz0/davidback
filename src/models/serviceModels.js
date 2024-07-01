@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 export const ServicesModels = {
 
-    async createService({name, base_price, colaborator_percent, colaborator_value, profit, genre, repass_percent, repass_value}){
+    async createService({name, base_price, colaborator_percent, colaborator_value, profit, genre, repass_percent, repass_value, description}){
         return prisma.services.create({
             data: {
                 name,
@@ -15,6 +15,7 @@ export const ServicesModels = {
                 genre,
                 repass_percent,
                 repass_value,
+                description,
             }
         });
     },
@@ -89,13 +90,14 @@ export const ServicesModels = {
     },
 
 
-    async updateService(serviceId, {name, base_price, colaborator_percent, colaborator_value, profit, genre, repass_percent, repass_value}){
+    async updateService(serviceId, {name, base_price, colaborator_percent, colaborator_value, profit, genre, repass_percent, repass_value, description}){
         return prisma.services.update({
             where: {
                 id: serviceId
             },
             data: {
                 name,
+                description,
                 base_price,
                 colaborator_percent,
                 colaborator_value,
