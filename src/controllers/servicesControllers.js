@@ -74,6 +74,8 @@ export const ServicesControllers = {
         try {
             const { serviceName, serviceBasePrice, serviceColabPercent, serviceRepassPercent,serviceDescription } = req.body;
 
+            const profit = serviceBasePrice * (1 - serviceColabPercent/100) * (serviceRepassPercent/100);
+            
             const service = await ServicesModels.getServiceById(Number(req.params.serviceId));
             
             const serviceData = {
@@ -86,7 +88,7 @@ export const ServicesControllers = {
 
                 colaborator_value: Number((serviceBasePrice*(1 - serviceColabPercent/100)).toFixed(2)),
                 repass_value: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (serviceColabPercent/100)).toFixed(2)),
-                profit: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (1 - serviceColabPercent/100)).toFixed(2)),
+                profit,
             };
 
             const updatedService = await ServicesModels.updateService(Number(req.params.serviceId), serviceData);
