@@ -87,7 +87,7 @@ export const ServicesControllers = {
                 repass_percent: Number(serviceRepassPercent),
 
                 colaborator_value: Number((serviceBasePrice*(1 - serviceColabPercent/100)).toFixed(2)),
-                repass_value: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (serviceColabPercent/100)).toFixed(2)),
+                repass_value: Number((serviceBasePrice * (1 - serviceColabPercent/100) * (1 - serviceRepassPercent/100)).toFixed(2)),
                 profit,
             };
 
