@@ -63,6 +63,7 @@ model forms {
   identify      String          @db.VarChar(220)
   created_at    DateTime        @default(dbgenerated("'2024-02-19'::date")) @db.Date
   updated_at    DateTime        @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  is_deleted    Boolean?        @default(false)
   colaborators  colaborators[]
   form_services form_services[]
 }

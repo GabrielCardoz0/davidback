@@ -32,7 +32,8 @@ export const FormsModels = {
             where: {
                 name: {
                     contains: search ? search : ''
-                }
+                },
+                is_deleted: false
             },
 
             orderBy: {
@@ -46,11 +47,24 @@ export const FormsModels = {
     },
 
     getFormsCount(){
-        return prisma.forms.count();
+        return prisma.forms.count({
+            where: {
+                is_deleted: false
+            }
+        });
     },
 
     async deleteFormById(id){
         //console.log("CHEGOU AQUI NO MODEL", id);
+        return await prisma.forms.update({
+            data: {
+                is_deleted: true
+            },
+            where: {
+                
+            }
+        });
+
         await prisma.form_services.deleteMany({
             where: {
                 form_id: Number(id),
@@ -67,7 +81,8 @@ export const FormsModels = {
     getFormById(id){
         return prisma.forms.findFirst({
             where: {
-                id: Number(id)
+                id: Number(id),
+                is_deleted: false
             }
         })
     },
@@ -87,7 +102,8 @@ export const FormsModels = {
                 }
             },
             where: {
-                identify
+                identify,
+                is_deleted: false
             }
         });
     },
@@ -95,7 +111,8 @@ export const FormsModels = {
     getFormByIdentify(identify){
         return prisma.forms.findFirst({
             where: {
-                identify: identify
+                identify: identify,
+                is_deleted: false
             }
         })
     },
