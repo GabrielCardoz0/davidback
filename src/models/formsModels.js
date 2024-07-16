@@ -61,7 +61,7 @@ export const FormsModels = {
                 is_deleted: true
             },
             where: {
-                
+                id: Number(id)
             }
         });
 
