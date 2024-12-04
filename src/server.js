@@ -9,7 +9,7 @@ const server = express();
 
 server
     .use(express.json())
-    .use(cors())
+    .use(cors({ origin: '*' }))
     .use(router);
 
 
