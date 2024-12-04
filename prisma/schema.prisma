@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model addresses {
+  id           Int            @id(map: "addresses_pk") @default(autoincrement())
+  cep          String         @db.VarChar(30)
+  street       String         @db.VarChar(180)
+  neighborhood String         @db.VarChar(180)
+  city         String         @db.VarChar(180)
+  state        String         @db.VarChar(10)
+  number       String         @db.VarChar(10)
+  created_at   DateTime       @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  updated_at   DateTime       @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  colaborators colaborators[]
+}
+
+model colaborator_services {
+  id             Int          @id(map: "colaborator_services_pk") @default(autoincrement())
+  colaborator_id Int
+  service_id     Int
+  frequency_id   Int
+  colaborators   colaborators @relation(fields: [colaborator_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "colaborator_services_fk0")
+  services       services     @relation(fields: [service_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "colaborator_services_fk1")
+  frequencies    frequencies  @relation(fields: [frequency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "colaborator_services_fk2")
+}
+
+model colaborators {
+  id                   Int                    @id(map: "colaborators_pk") @default(autoincrement())
+  name                 String                 @db.VarChar(120)
+  cpf                  String                 @db.VarChar(30)
+  genre                String                 @db.VarChar(10)
+  email                String                 @db.VarChar(220)
+  tel                  String                 @db.VarChar(120)
+  birthday             String                 @db.VarChar(120)
+  company_name         String                 @db.VarChar(120)
+  registered           Boolean                @default(false)
+  form_id              Int
+  address_id           Int
+  created_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  updated_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  colaborator_services colaborator_services[]
+  forms                forms                  @relation(fields: [form_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "colaborators_fk0")
+  addresses            addresses              @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "colaborators_fk1")
+}
+
+model form_services {
+  id         Int      @id(map: "form_services_pk") @default(autoincrement())
+  form_id    Int
+  service_id Int
+  forms      forms    @relation(fields: [form_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "form_services_fk0")
+  services   services @relation(fields: [service_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "form_services_fk1")
+}
+
+model forms {
+  id            Int             @id(map: "forms_pk") @default(autoincrement())
+  name          String          @db.VarChar(150)
+  identify      String          @db.VarChar(220)
+  created_at    DateTime        @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  updated_at    DateTime        @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  is_deleted    Boolean?        @default(false)
+  colaborators  colaborators[]
+  form_services form_services[]
+}
+
+model frequencies {
+  id                   Int                    @id(map: "frequencies_pk") @default(autoincrement())
+  frequency            String                 @db.VarChar(120)
+  service_id           Int
+  created_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  updated_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  value                Int?
+  colaborator_services colaborator_services[]
+  services             services               @relation(fields: [service_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "frequencies_fk0")
+}
+
+model services {
+  id                   Int                    @id(map: "services_pk") @default(autoincrement())
+  name                 String                 @db.VarChar(180)
+  base_price           Float                  @db.Real
+  colaborator_percent  Float                  @db.Real
+  colaborator_value    Float                  @db.Real
+  repass_percent       Float                  @db.Real
+  repass_value         Float                  @db.Real
+  profit               Float                  @db.Real
+  genre                String                 @db.VarChar(20)
+  created_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  updated_at           DateTime               @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  description          String?
+  colaborator_services colaborator_services[]
+  form_services        form_services[]
+  frequencies          frequencies[]
+}
+
+model users {
+  id         Int      @id(map: "users_pk") @default(autoincrement())
+  email      String   @db.VarChar(250)
+  password   String   @db.VarChar(180)
+  created_at DateTime @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  updated_at DateTime @default(dbgenerated("'2024-02-19'::date")) @db.Date
+  name       String?  @db.VarChar(120)
+}
