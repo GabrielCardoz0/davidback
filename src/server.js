@@ -13,8 +13,4 @@ server
     .use(router);
 
 
-<<<<<<< HEAD
 server.listen(process.env.PORT || 3040, () => console.log(`Server start at port: ${process.env.PORT || 3040}`));
-=======
-server.listen(process.env.PORT || 3040, () => console.log(`Server start at port: ${process.env.PORT || 3040}`));
->>>>>>> 738560f863fc330f36e3784a170ee056f866d314
