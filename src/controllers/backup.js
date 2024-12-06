@@ -6,11 +6,7 @@ const prisma = new PrismaClient();
 
 export default async function backupDb(req,res) {
     // const outputFile = './src/files/backup.sql';
-<<<<<<< HEAD
-    const outputFile = "/var/www/beautytag-back.com/backups/backup.sql";
-=======
     const outputFile = "~/backups/backup.sql";
->>>>>>> 738560f863fc330f36e3784a170ee056f866d314
     try {
         await generateDumpFile(outputFile);
         return res.download(outputFile);
