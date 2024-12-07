@@ -105,12 +105,6 @@ model users {
   updated_at DateTime @default(dbgenerated("'2024-02-19'::date")) @db.Date
   name       String?  @db.VarChar(120)
 }
-<<<<<<< HEAD
-=======
-
-
-
-
 
 
 
@@ -165,4 +159,3 @@ model check_ins {
   start_at        DateTime? @db.Timestamp(6)
   end_at          DateTime? @db.Timestamp(6)
 }
->>>>>>> 738560f863fc330f36e3784a170ee056f866d314
